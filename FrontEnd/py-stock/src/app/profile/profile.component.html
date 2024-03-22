@@ -1,0 +1,144 @@
+<div class="p-2 text-center bg-primary" style="margin-top: 50px;">
+    <h1 class="mb-3 font-Lobster text-white">Stalkers</h1>
+    <h4 class="mb-3 text-white">Stock market analysis dashboard</h4>
+</div>
+
+<div >
+    <div class="pt-4"></div>
+    <div class="row">
+
+        <div>
+            <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height: '800px'}"
+                (chartInstance)="getChartInstance($event)"></canvasjs-chart>
+        </div>
+    </div>
+    <div class="p-2 text-center bg-light" style="margin-top: 50px;margin-bottom: 50px;">
+    <h1 class="mb-3">Stock prices of stocks</h1>
+    </div>
+    <div class="row">
+        
+        <select id="myDropdown" (change)="onSelectionChange($event)" class="btn btn-primary dropdown-toggle">
+            <option value="aapl">Apple</option>
+            <option value="msft">Microsoft</option>
+            <option value="tsla">Tesla</option>
+            <option value="ibm">IBM</option>
+            <option value="ford">Ford</option>
+            <option value="nokia">Nokia</option>
+        </select>
+        <div class="control-section">
+            <div>
+                <ejs-stockchart id='StockChartCandle' [chartArea]='chartArea' [primaryXAxis]='primaryXAxis'
+                    style="display:block;height: 800px;" [primaryYAxis]='primaryYAxis' [crosshair]='crosshair' [title]='title'
+                    [tooltip]='tooltip' (tooltipRender)='tooltipRender($event)'
+                    (axisLabelRender)='axisLabelRender($event)' (load)='load($event)' [seriesType]='seriesType'
+                    [indicatorType]='indicatorType' [trendlineType]='trendlineType'>
+
+                    <e-stockchart-axes>
+                        <e-stockchart-axis rowIndex=1 name='yAxis1' opposedPosition=true labelPosition='Inside'
+                            tickPosition='Inside'>
+                        </e-stockchart-axis>
+                    </e-stockchart-axes>
+                    <e-stockchart-rows>
+                        <e-stockchart-row height=10%></e-stockchart-row>
+                        <e-stockchart-row height=90%></e-stockchart-row>
+                    </e-stockchart-rows>
+                    <e-stockchart-series-collection>
+                        <e-stockchart-series [dataSource]='data1' type='Candle' xName='x' yName='high'
+                            yAxisName='yAxis1' high='high' low='low'>
+                            <e-trendlines visible='false'>
+
+                                <e-trendline visible='false'></e-trendline>
+                            </e-trendlines>
+                        </e-stockchart-series>
+                        <e-stockchart-series [dataSource]='data1' type='Column' xName='x' yName='volume' high='high'
+                            low='low' name='Apple Inc' [enableTooltip]='columnTooltip'> </e-stockchart-series>
+                    </e-stockchart-series-collection>
+                </ejs-stockchart>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-5">
+        <ng-container>
+        
+        <div class="p-2 text-center bg-light" style="margin-top: 20px;">
+        <h1 class="mb-3">Predict Stock Prices</h1>
+        </div>
+            <div class="form-group row">
+
+                <div class="col-md-2">
+                    <div class="pt-4"></div>
+                    <div *ngIf="premior; else silverUser">
+                        <select id="myDropdown" (change)="onSelectionChangeModel($event)"
+                            class="btn btn-primary dropdown-toggle">
+                            <option value="aapl">Apple</option>
+                            <option value="msft">Microsoft</option>
+                            <option value="tsla">Tesla</option>
+                            <option value="ibm">IBM</option>
+                            <option value="ford">Ford</option>
+                            <option value="nokia">Nokia</option>
+                            <option value="general">General</option>
+                        </select>
+                    </div>
+                    <ng-template #silverUser>
+                        <div *ngIf="!premior">
+                            <select id="myDropdown" (change)="onSelectionChangeModel($event)"
+                                class="btn btn-primary dropdown-toggle">
+                                <option value="general">General</option>
+
+                            </select>
+                        </div>
+                    </ng-template>
+
+                </div>
+                <div class="form-group col-md-2">
+                    <label for="dateInput">Date</label>
+                    <input type="date" class="form-control" id="dateInput" [(ngModel)]="predictStockPriceModel.date" max="{{ maxDate }}">
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="lowInput">Low</label>
+                    <input type="number" class="form-control" id="lowInput" [(ngModel)]="predictStockPriceModel.low">
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="highInput">High</label>
+                    <input type="number" class="form-control" id="highInput" [(ngModel)]="predictStockPriceModel.high">
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="openInput">Open</label>
+                    <input type="number" class="form-control" id="openInput" [(ngModel)]="predictStockPriceModel.open">
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="closeInput">Close</label>
+                    <input type="number" class="form-control" id="closeInput"
+                        [(ngModel)]="predictStockPriceModel.close">
+                </div>
+                <div class="form-group col-md-2">
+                    <div class="pt-4"></div>
+                    <button type="submit" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+                </div>
+
+            </div>
+        </ng-container>
+        <ng-container>
+            <div class="form-group row">
+                <div class="pt-4"></div>
+                <div class="form-group col-md-5 row">
+                    
+                    <label class="col-form-label form-control-lg col-8">Is stock profitable:</label>
+                    <label class="col-form-label form-control-lg col-2" [ngClass]="{'text-success': dataField1 === 'Yes', 'text-danger': dataField1 === 'No'}">
+                         {{ dataField1 }}
+                      </label>
+                    
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="col-form-label form-control-lg">Success Probability : {{dataField2}}</label>
+
+                </div>
+            </div>
+        </ng-container>
+        <div class="pt-4"></div>
+        <div class="row" *ngIf="premior">
+            <canvasjs-chart id="chartContainer" [styles]="{width: '100%', height: '600px'}"></canvasjs-chart>    
+        </div>  
+    </div>
+</div>

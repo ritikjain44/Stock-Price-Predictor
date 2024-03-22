@@ -1,1 +1,1 @@
-# Stock-Price-Predictor
+# Python stock prediction
